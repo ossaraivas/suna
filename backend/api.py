@@ -16,7 +16,7 @@ from collections import OrderedDict
 # Import the agent API module
 from agent import api as agent_api
 from sandbox import api as sandbox_api
-from services import billing as billing_api
+# from services import billing as billing_api
 
 # Load environment variables (these will be available through config)
 load_dotenv()
