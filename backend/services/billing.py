@@ -224,12 +224,7 @@ async def check_billing_status(client, user_id: str) -> Tuple[bool, str, Optiona
             'plan_name': 'free'
         }
     
-    # Extract price ID from subscription items
-    price_id = None
-    if subscription.get('items') and subscription['items'].get('data') and len(subscription['items']['data']) > 0:
-        price_id = subscription['items']['data'][0]['price']['id']
-    else:
-        price_id = subscription.get('price_id', config.STRIPE_FREE_TIER_ID)
+
     
    # Extract price ID from subscription items
 price_id = None
