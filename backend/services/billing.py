@@ -231,11 +231,19 @@ async def check_billing_status(client, user_id: str) -> Tuple[bool, str, Optiona
     else:
         price_id = subscription.get('price_id', config.STRIPE_FREE_TIER_ID)
     
-    # Get tier info - default to free tier if not found
-    tier_info = SUBSCRIPTION_TIERS.get(price_id)
-    if not tier_info:
-        logger.warning(f"Unknown subscription tier: {price_id}, defaulting to free tier")
-        tier_info = SUBSCRIPTION_TIERS[config.STRIPE_FREE_TIER_ID]
+   # Extract price ID from subscription items
+price_id = None
+if subscription.get('items') and subscription['items'].get('data') and len(subscription['items']['data']) > 0:
+    price_id = subscription['items']['data'][0]['price']['id']
+else:
+    price_id = subscription.get('price_id', config.STRIPE_FREE_TIER_ID)
+
+# Get tier info - default to free tier if not found
+tier_info = SUBSCRIPTION_TIERS.get(price_id)
+if not tier_info:
+    logger.warning(f"Unknown subscription tier: {price_id}, defaulting to free tier")
+    tier_info = SUBSCRIPTION_TIERS[config.STRIPE_FREE_TIER_ID]
+
     
     # Calculate current month's usage
     current_usage = await calculate_monthly_usage(client, user_id)
